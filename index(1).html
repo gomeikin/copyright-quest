@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <title>COPYRIGHT QUEST｜その投稿、ちょっと待った！</title>
+  <style>
+    :root{
+      --ink:#172033;
+      --muted:#64748b;
+      --paper:#ffffff;
+      --bg:#eef4ff;
+      --line:#dbe4f0;
+      --navy:#0f172a;
+      --indigo:#4f46e5;
+      --cyan:#0891b2;
+      --green:#16a34a;
+      --yellow:#ca8a04;
+      --red:#dc2626;
+      --soft-green:#ecfdf5;
+      --soft-yellow:#fffbeb;
+      --soft-red:#fef2f2;
+      --soft-indigo:#eef2ff;
+      --shadow:0 18px 55px rgba(15,23,42,.14);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(79,70,229,.13), transparent 28rem),
+        radial-gradient(circle at 90% 0%, rgba(8,145,178,.12), transparent 24rem),
+        linear-gradient(180deg,#f8fbff 0%,var(--bg) 100%);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+      min-height:100vh;
+    }
+    button, textarea{font:inherit}
+    button{cursor:pointer}
+    .app{width:min(980px,calc(100% - 24px));margin:0 auto;padding:18px 0 42px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 14px;background:rgba(255,255,255,.82);
+      backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.9);
+      border-radius:18px;box-shadow:0 8px 30px rgba(15,23,42,.07);
+      position:sticky;top:8px;z-index:10;
+    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.03em}
+    .brand-badge{
+      width:38px;height:38px;display:grid;place-items:center;border-radius:12px;
+      background:linear-gradient(135deg,var(--indigo),var(--cyan));color:#fff;font-size:20px;
+    }
+    .mini-progress{display:flex;align-items:center;gap:10px;min-width:180px}
+    .progress-track{height:9px;background:#e2e8f0;border-radius:999px;overflow:hidden;flex:1}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--cyan));transition:width .35s ease}
+    .progress-text{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+    .panel{
+      background:var(--paper);border:1px solid rgba(203,213,225,.7);
+      border-radius:28px;box-shadow:var(--shadow);overflow:hidden;margin-top:18px;
+    }
+    .hero{
+      padding:40px 32px 34px;position:relative;overflow:hidden;
+      background:
+        linear-gradient(135deg,rgba(79,70,229,.98),rgba(8,145,178,.93));
+      color:white;
+    }
+    .hero:before,.hero:after{
+      content:"";position:absolute;border:2px solid rgba(255,255,255,.18);border-radius:50%;
+    }
+    .hero:before{width:330px;height:330px;right:-130px;top:-150px}
+    .hero:after{width:190px;height:190px;right:75px;bottom:-110px}
+    .kicker{font-weight:900;letter-spacing:.18em;font-size:12px;opacity:.86}
+    h1{margin:9px 0 12px;font-size:clamp(34px,7vw,66px);line-height:1;font-weight:1000}
+    .hero-sub{font-size:clamp(18px,3.5vw,28px);font-weight:900;margin:0 0 14px}
+    .hero-copy{max-width:700px;line-height:1.9;margin:0;color:rgba(255,255,255,.92)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;position:relative;z-index:2}
+    .btn{
+      border:0;border-radius:14px;padding:13px 18px;font-weight:900;
+      transition:transform .16s ease,box-shadow .16s ease,opacity .16s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{background:var(--navy);color:white;box-shadow:0 8px 22px rgba(15,23,42,.25)}
+    .btn-light{background:white;color:var(--navy)}
+    .btn-outline{background:transparent;color:var(--navy);border:1.5px solid #cbd5e1}
+    .btn-wide{width:100%;padding:15px 18px}
+    .intro-grid{padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .intro-card{padding:18px;border:1px solid var(--line);border-radius:18px;background:#fbfdff}
+    .intro-card .num{font-weight:1000;color:var(--indigo);font-size:13px}
+    .intro-card h3{margin:6px 0 6px;font-size:17px}
+    .intro-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+    .note{margin:0 24px 24px;padding:14px 16px;border-radius:15px;background:#f8fafc;color:#475569;font-size:13px;line-height:1.7}
+    .hidden{display:none !important}
+    .mission-head{
+      padding:26px 28px 20px;border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg,#fff,#fbfdff)
+    }
+    .mission-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+    .mission-label{font-size:12px;letter-spacing:.16em;font-weight:1000;color:var(--indigo)}
+    .mission-title{margin:5px 0 0;font-size:clamp(25px,5vw,38px);line-height:1.25}
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;
+      background:var(--soft-indigo);color:var(--indigo);font-size:12px;font-weight:900;white-space:nowrap;
+    }
+    .mission-body{padding:26px 28px 30px}
+    .scene{
+      padding:22px;border-radius:20px;background:#f8fafc;border:1px solid #e2e8f0;
+      font-size:17px;line-height:1.9;font-weight:650;
+    }
+    .question-title{margin:24px 0 10px;font-weight:1000;font-size:20px}
+    .triage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .triage-btn{
+      border:2px solid #e2e8f0;background:white;border-radius:18px;padding:18px 10px;
+      text-align:center;font-weight:1000;transition:.18s ease;min-height:94px;
+    }
+    .triage-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+    .triage-btn .icon{display:block;font-size:27px;margin-bottom:5px}
+    .triage-btn.green:hover,.triage-btn.green.selected{border-color:#22c55e;background:var(--soft-green)}
+    .triage-btn.yellow:hover,.triage-btn.yellow.selected{border-color:#eab308;background:var(--soft-yellow)}
+    .triage-btn.red:hover,.triage-btn.red.selected{border-color:#ef4444;background:var(--soft-red)}
+    .evidence{
+      margin-top:18px;border-radius:18px;padding:18px 18px 16px;
+      background:linear-gradient(135deg,#0f172a,#1e293b);color:white;
+      animation:rise .28s ease;
+    }
+    @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .evidence .eyebrow{font-size:12px;letter-spacing:.13em;font-weight:1000;color:#67e8f9}
+    .evidence p{margin:7px 0 0;line-height:1.75}
+    .option-list{display:grid;gap:10px;margin-top:12px}
+    .option-btn{
+      width:100%;text-align:left;border:2px solid #e2e8f0;background:white;
+      border-radius:16px;padding:15px 16px;font-weight:800;color:var(--ink);
+      transition:.16s ease;line-height:1.55;
+    }
+    .option-btn:hover:not(:disabled){border-color:#818cf8;background:#fafaff;transform:translateY(-1px)}
+    .option-btn:disabled{cursor:default}
+    .option-btn.correct{border-color:#22c55e;background:var(--soft-green);color:#166534}
+    .option-btn.wrong{border-color:#f87171;background:var(--soft-red);color:#991b1b}
+    .feedback{margin-top:18px;padding:19px;border-radius:18px;border:1px solid #cbd5e1;background:#fff;animation:rise .28s ease}
+    .feedback-title{font-weight:1000;font-size:18px;margin-bottom:7px}
+    .feedback p{margin:0;line-height:1.8;color:#475569}
+    .feedback .safe-action{
+      margin-top:12px;padding:12px 14px;background:#f8fafc;border-radius:12px;
+      font-size:14px;font-weight:800;color:#334155;
+    }
+    details.funfact{margin-top:14px;border:1px dashed #94a3b8;border-radius:15px;padding:11px 14px;background:#fffdf5}
+    details.funfact summary{cursor:pointer;font-weight:1000;color:#92400e}
+    details.funfact p{margin:8px 0 2px;color:#78350f;line-height:1.7;font-size:14px}
+    .next-row{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+    .stats-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+    .stat-chip{background:#f8fafc;border:1px solid #e2e8f0;border-radius:13px;padding:9px 10px;text-align:center}
+    .stat-chip b{display:block;font-size:17px}
+    .stat-chip span{font-size:11px;color:var(--muted);font-weight:800}
+    .checklist-modal{
+      position:fixed;inset:0;background:rgba(15,23,42,.62);display:grid;place-items:center;
+      padding:14px;z-index:50;
+    }
+    .checklist-card{
+      width:min(880px,100%);max-height:88vh;overflow:auto;background:white;border-radius:24px;
+      padding:22px;box-shadow:var(--shadow)
+    }
+    .checklist-top{display:flex;justify-content:space-between;gap:12px;align-items:center;position:sticky;top:-22px;background:white;padding:14px 0 10px;z-index:2}
+    .checklist-top h2{margin:0;font-size:22px}
+    .close{border:0;background:#e2e8f0;border-radius:10px;width:38px;height:38px;font-weight:1000}
+    .check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .check-item{border:1px solid #dbe4f0;border-radius:15px;padding:14px;background:#fbfdff}
+    .check-item h3{margin:0 0 8px;font-size:16px}
+    .check-item ul{margin:0;padding-left:19px;color:#475569;line-height:1.65;font-size:13px}
+    .report{padding:30px}
+    .report-hero{text-align:center;padding:18px 12px 24px}
+    .report-icon{font-size:58px}
+    .report h2{margin:8px 0 6px;font-size:clamp(28px,5vw,44px)}
+    .score-big{font-size:54px;font-weight:1000;color:var(--indigo);letter-spacing:-.04em}
+    .report-sub{color:var(--muted);line-height:1.75}
+    .skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+    .skill{padding:15px;border:1px solid #e2e8f0;border-radius:16px;background:#fbfdff}
+    .skill-top{display:flex;justify-content:space-between;font-weight:900;font-size:14px}
+    .skill-bar{height:10px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:9px}
+    .skill-fill{height:100%;background:linear-gradient(90deg,var(--indigo),var(--cyan));border-radius:99px}
+    .takeaways{padding:18px;border-radius:18px;background:#f8fafc;border:1px solid #e2e8f0}
+    .takeaways h3{margin:0 0 8px}
+    .takeaways ul{margin:0;padding-left:21px;line-height:1.9;color:#475569}
+    .reflection{margin-top:18px}
+    .reflection label{display:block;font-weight:1000;margin-bottom:8px}
+    .reflection textarea{
+      width:100%;min-height:120px;resize:vertical;border:2px solid #dbe4f0;border-radius:16px;
+      padding:14px;outline:none;line-height:1.7;background:#fff
+    }
+    .reflection textarea:focus{border-color:#818cf8;box-shadow:0 0 0 4px #eef2ff}
+    .report-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .toast{
+      position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+      background:#0f172a;color:white;padding:11px 15px;border-radius:999px;font-weight:800;
+      opacity:0;pointer-events:none;transition:.2s ease;z-index:99;font-size:13px;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .final-mission{border:2px solid #f59e0b;box-shadow:0 0 0 5px #fffbeb}
+    .footer{text-align:center;color:#64748b;font-size:12px;line-height:1.8;padding:16px 8px 0}
+
+    .submit-card{
+      margin-top:18px;padding:20px;border-radius:20px;
+      background:linear-gradient(180deg,#f8fbff,#ffffff);
+      border:2px solid #dbeafe;
+    }
+    .submit-card h3{margin:0 0 6px;font-size:20px}
+    .submit-card p{margin:0 0 14px;color:#64748b;line-height:1.7;font-size:13px}
+    .name-input{
+      width:100%;border:2px solid #dbe4f0;border-radius:14px;
+      padding:13px 14px;outline:none;background:#fff;
+    }
+    .name-input:focus{border-color:#818cf8;box-shadow:0 0 0 4px #eef2ff}
+    .field-label{display:block;font-weight:1000;margin:12px 0 7px}
+    .submit-status{margin-top:10px;font-size:13px;font-weight:800;color:#475569;min-height:1.4em}
+    .ranking{
+      margin-top:20px;border:1px solid #dbe4f0;border-radius:22px;overflow:hidden;background:#fff;
+    }
+    .ranking-head{
+      padding:18px 20px;background:linear-gradient(135deg,#0f172a,#312e81);color:#fff;
+    }
+    .ranking-head-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .ranking-head h3{margin:3px 0 0;font-size:22px}
+    .ranking-meta{font-size:12px;color:#c7d2fe;margin-top:7px;line-height:1.7}
+    .rank-list{padding:10px}
+    .rank-card{
+      display:grid;grid-template-columns:48px minmax(90px,150px) 72px 1fr;
+      gap:10px;align-items:start;padding:13px 10px;border-bottom:1px solid #eef2f7;
+    }
+    .rank-card:last-child{border-bottom:0}
+    .rank-no{font-size:18px;font-weight:1000;text-align:center}
+    .rank-name{font-weight:1000;overflow-wrap:anywhere}
+    .rank-score{font-weight:1000;color:#4f46e5;white-space:nowrap}
+    .rank-reflection{color:#475569;line-height:1.55;font-size:13px;overflow-wrap:anywhere}
+    .rank-note{padding:0 18px 15px;color:#64748b;font-size:12px;line-height:1.6}
+    .ranking-empty{padding:24px;text-align:center;color:#64748b}
+    .api-warning{
+      margin-top:12px;padding:12px 14px;border-radius:13px;background:#fff7ed;
+      border:1px solid #fed7aa;color:#9a3412;font-size:12px;line-height:1.6;
+    }
+    @media(max-width:720px){
+      .rank-card{grid-template-columns:38px 1fr 64px}
+      .rank-reflection{grid-column:2 / 4}
+    }
+
+    @media(max-width:720px){
+      .app{width:min(100% - 14px,980px);padding-top:8px}
+      .topbar{border-radius:14px;top:4px}
+      .mini-progress{min-width:130px}
+      .brand span:last-child{display:none}
+      .hero{padding:31px 20px 28px}
+      .intro-grid{grid-template-columns:1fr;padding:16px}
+      .note{margin:0 16px 18px}
+      .mission-head,.mission-body,.report{padding-left:18px;padding-right:18px}
+      .mission-row{flex-direction:column}
+      .triage-grid{grid-template-columns:1fr}
+      .triage-btn{min-height:70px;display:flex;align-items:center;justify-content:center;gap:10px}
+      .triage-btn .icon{display:inline;margin:0}
+      .stats-mini{grid-template-columns:1fr!important}
+      .check-grid,.skill-grid{grid-template-columns:1fr}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-badge">©</div>
+        <span>COPYRIGHT QUEST</span>
+      </div>
+      <div class="mini-progress" id="topProgressWrap">
+        <div style="min-width:78px;text-align:right">
+          <div style="font-size:10px;font-weight:900;color:#64748b">SCORE</div>
+          <div id="liveScore" style="font-size:20px;font-weight:1000;color:#4f46e5;line-height:1">0点</div>
+        </div>
+        <div style="flex:1">
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text" id="progressText" style="margin-top:3px;text-align:right">0 / 10</div>
+        </div>
+      </div>
+      <button class="btn btn-outline" id="openChecklistTop" style="padding:9px 11px;font-size:12px">チェックリスト</button>
+    </header>
+
+    <section class="panel" id="startScreen">
+      <div class="hero">
+        <div class="kicker">COPYRIGHT QUEST</div>
+        <h1>その投稿、<br>ちょっと待った！</h1>
+        <p class="hero-sub">君は「著作権レスキュー隊」。10件のトラブルを解決せよ。</p>
+        <p class="hero-copy">
+          大切なのは、法律用語を暗記することだけではありません。
+          「誰が作った？」「どこで使う？」「公開する？」「利用条件は？」を手がかりに、
+          作者の思いや権利を考えながら判断していきます。
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-light" id="startBtn">MISSION START</button>
+          <button class="btn btn-primary" id="openChecklistStart">先にチェックリストを見る</button>
+        </div>
+      </div>
+      <div class="intro-grid">
+        <div class="intro-card">
+          <div class="num">STEP 1｜4点</div>
+          <h3>まず考える</h3>
+          <p>🟢使える／🟡条件を確認／🔴そのままでは使わない、から第一判断。正しく判断できると4点。</p>
+        </div>
+        <div class="intro-card">
+          <div class="num">STEP 2</div>
+          <h3>追加情報を読む</h3>
+          <p>場所・公開方法・利用規約など、新しい情報を読んで考え直します。</p>
+        </div>
+        <div class="intro-card">
+          <div class="num">STEP 3｜6点</div>
+          <h3>確かめて決める</h3>
+          <p>最後に安全な行動を選びます。正しく判断できると6点。1MISSION最大10点です。</p>
+        </div>
+      </div>
+      <p class="note">
+        授業用アプリです。実際の利用では、作品ごとの利用規約・公式ガイドライン・権利者の許可などを確認してください。
+      </p>
+    </section>
+
+    <section class="panel hidden" id="missionScreen">
+      <div class="mission-head" id="missionHead">
+        <div class="mission-row">
+          <div>
+            <div class="mission-label" id="missionLabel">MISSION 01</div>
+            <h2 class="mission-title" id="missionTitle">文化祭ポスター事件</h2>
+          </div>
+          <div class="tag" id="missionTag">画像</div>
+        </div>
+      </div>
+      <div class="mission-body">
+        <div class="scene" id="sceneText"></div>
+
+        <div id="triageSection">
+          <div class="question-title">まず、あなたの第一判断は？</div>
+          <div class="triage-grid">
+            <button class="triage-btn green" data-triage="green"><span class="icon">🟢</span>使える</button>
+            <button class="triage-btn yellow" data-triage="yellow"><span class="icon">🟡</span>条件を確認</button>
+            <button class="triage-btn red" data-triage="red"><span class="icon">🔴</span>そのままでは使わない</button>
+          </div>
+        </div>
+
+        <div class="evidence hidden" id="evidenceBox">
+          <div class="eyebrow">🔎 追加情報</div>
+          <p id="evidenceText"></p>
+        </div>
+
+        <div id="finalSection" class="hidden">
+          <div class="question-title" id="finalPrompt">あなたなら、次にどうする？</div>
+          <div class="option-list" id="optionList"></div>
+        </div>
+
+        <div class="feedback hidden" id="feedbackBox">
+          <div class="feedback-title" id="feedbackTitle"></div>
+          <p id="feedbackText"></p>
+          <div class="safe-action" id="safeAction"></div>
+          <details class="funfact">
+            <summary>💡 へぇ！を開く</summary>
+            <p id="funFact"></p>
+          </details>
+          <div class="next-row">
+            <button class="btn btn-primary" id="nextBtn">次のMISSIONへ</button>
+          </div>
+        </div>
+
+        <div class="stats-mini" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-chip"><b id="miniScore">0点</b><span>現在の得点</span></div>
+          <div class="stat-chip"><b id="miniFirst">0 / 40</b><span>①まず考える</span></div>
+          <div class="stat-chip"><b id="miniFinal">0 / 60</b><span>②確かめて決める</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="reportScreen">
+      <div class="report">
+        <div class="report-hero">
+          <div class="report-icon" id="reportIcon">🛡️</div>
+          <div class="kicker" style="color:#4f46e5">MISSION COMPLETE</div>
+          <h2 id="reportTitle">著作権レスキュー隊</h2>
+          <div class="score-big" id="reportScore">0 / 10</div>
+          <p class="report-sub" id="reportMessage"></p>
+        </div>
+
+        <div class="skill-grid" id="skillGrid"></div>
+
+        <div class="feedback" style="display:block;margin-top:12px" id="evaluationCommentBox">
+          <div class="feedback-title">先生からの評価コメント</div>
+          <p id="evaluationComment"></p>
+        </div>
+
+        <div class="takeaways" style="margin-top:18px">
+          <h3>今日の5つの判断ポイント</h3>
+          <ul>
+            <li><b>誰が作った？</b> — 自分以外の作品には、作った人の権利や思いがある。</li>
+            <li><b>どこで使う？</b> — 授業・校内と、SNSなど外部公開では条件が変わることがある。</li>
+            <li><b>「フリー」でも条件を見る</b> — クレジット、加工、公開、商用利用などのルールを確認する。</li>
+            <li><b>公式ガイドラインを探す</b> — 二次創作、ゲーム実況、AIサービスなどは利用条件を確認する。</li>
+            <li><b>迷ったら勝手に進めない</b> — 作者・権利者・先生などに確認する。</li>
+          </ul>
+        </div>
+
+        <div class="reflection">
+          <label for="reflectionText">FINAL：著作権で一番大切だと思うことは何ですか？</label>
+          <textarea id="reflectionText" maxlength="160" placeholder="今日のMISSIONをふまえて、自分の言葉で書いてみよう。（160字まで）"></textarea>
+
+          <div class="submit-card">
+            <h3>🏆 クラスランキングに参加</h3>
+            <p>
+              得点と振り返りをクラスで共有します。ランキングには下の「表示名」が出ます。
+              <b>本名ではなく、出席番号・イニシャル・ニックネームをおすすめします。</b>
+            </p>
+            <label class="field-label" for="studentName">表示名</label>
+            <input class="name-input" id="studentName" maxlength="20" placeholder="例：17番 / Aさん / めいきん">
+            <div class="report-actions">
+              <button class="btn btn-primary" id="submitRankingBtn">ランキングに送信</button>
+              <button class="btn btn-outline" id="refreshRankingBtn">ランキングを更新</button>
+            </div>
+            <div class="submit-status" id="submitStatus"></div>
+            <div class="api-warning hidden" id="apiWarning">
+              ランキング機能はまだ未接続です。index.html 内の API_URL に、Google Apps Script のウェブアプリURLを設定してください。
+            </div>
+          </div>
+
+          <div class="ranking" id="rankingBox">
+            <div class="ranking-head">
+              <div class="ranking-head-top">
+                <div>
+                  <div class="kicker" style="color:#a5b4fc">CLASS SCORE RANKING</div>
+                  <h3 id="rankingTitle">クラスランキング</h3>
+                </div>
+                <button class="btn btn-light" id="rankingReloadMini" style="padding:8px 10px;font-size:12px">更新</button>
+              </div>
+              <div class="ranking-meta" id="rankingMeta">読み込み前</div>
+            </div>
+            <div class="rank-list" id="rankList">
+              <div class="ranking-empty">結果を送信すると、ここにランキングが表示されます。</div>
+            </div>
+            <div class="rank-note">
+              ※順位は得点だけで決まります。「著作権で一番大切だと思うこと」の文章自体には順位をつけていません。
+            </div>
+          </div>
+
+          <div class="report-actions">
+            <button class="btn btn-outline" id="copyReportBtn">結果＋振り返りをコピー</button>
+            <button class="btn btn-outline" id="restartBtn">もう一度挑戦</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">
+      今帰仁中学校「漫画泥棒」授業用・著作権学習アプリ案<br>
+      ※授業で扱うチェックリストと教材内容をもとにした学習用の表現です。
+    </p>
+  </main>
+
+  <div class="checklist-modal hidden" id="checklistModal" role="dialog" aria-modal="true" aria-labelledby="checklistTitle">
+    <div class="checklist-card">
+      <div class="checklist-top">
+        <div>
+          <div class="kicker" style="color:#4f46e5">QUICK CHECK</div>
+          <h2 id="checklistTitle">著作権トラブル防止チェックリスト</h2>
+        </div>
+        <button class="close" id="closeChecklist" aria-label="閉じる">×</button>
+      </div>
+      <div class="check-grid">
+        <div class="check-item">
+          <h3>🎵 音楽・BGM</h3>
+          <ul><li>買ったCDでも、お店・イベントで勝手に流してよいとは限らない。</li><li>動画BGMは、サービスのルールや音源の権利を確認。</li><li>「利用可能」でも条件を読む。</li></ul>
+        </div>
+        <div class="check-item">
+          <h3>🎭 台本・脚本</h3>
+          <ul><li>「ご自由にどうぞ」でも著作権放棄とは限らない。</li><li>改変・上演・公開の条件を確認。</li><li>分からなければ作者に確認する。</li></ul>
+        </div>
+        <div class="check-item">
+          <h3>🎨 イラスト・キャラ</h3>
+          <ul><li>キャラクターの無断グッズ化は避ける。</li><li>ファンアートは公式ガイドラインを確認。</li><li>許可された素材を利用条件の範囲で使う。</li></ul>
+        </div>
+        <div class="check-item">
+          <h3>🎬 映像・動画</h3>
+          <ul><li>テレビ番組・映画の無断アップロードはしない。</li><li>ゲーム実況は会社の配信ガイドラインを確認。</li><li>引用や抜粋は条件の確認が必要。</li></ul>
+        </div>
+        <div class="check-item">
+          <h3>📰 配布物・掲示物</h3>
+          <ul><li>ネット画像を、そのまま印刷物に使わない。</li><li>ロゴ・フォント・画像は利用条件を確認。</li><li>校内利用とSNS公開を同じだと思わない。</li></ul>
+        </div>
+        <div class="check-item">
+          <h3>🤖 生成AI</h3>
+          <ul><li>AIサービスの利用規約を確認。</li><li>既存作品に似ていないか確認。</li><li>生成したから何でも自由、とは考えない。</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <iframe name="questSubmitFrame" id="questSubmitFrame" class="hidden" title="送信"></iframe>
+  <div class="toast" id="toast">コピーしました</div>
+
+  <script>
+    // ▼ Apps Script をデプロイした後、この1行だけ書き換えてください
+    const API_URL = "https://script.google.com/macros/s/AKfycbwiYNJ0n5CyPWxWOUUt4b5ipG2PiYw9uVTl19F8uPUb0-lz3YkGUZ_NusvU1-kWw6xf/exec";
+
+    function apiConfigured(){
+      return API_URL.startsWith("https://script.google.com/");
+    }
+
+    function getClientId(){
+      const key = "copyrightQuestClientId";
+      let id = localStorage.getItem(key);
+      if(!id){
+        id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : "cq-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+        localStorage.setItem(key,id);
+      }
+      return id;
+    }
+
+    function escapeHtml(s){
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    const missions = [
+      {
+        title:"文化祭ポスター事件", tag:"画像・配布物",
+        scene:"文化祭のポスターを作っています。Google画像検索で、テーマにぴったりのイラストを見つけました。時間もないので、そのまま貼り付けて印刷しようと思っています。",
+        triage:"yellow",
+        evidence:"検索結果に出てきただけでは「自由に使ってよい画像」かどうかは分かりません。チェックリストでは、ネットの画像を許可なく印刷物で使うことに注意するよう示されています。",
+        prompt:"ポスター担当として、次にどうする？",
+        options:[
+          "検索で上に出た画像なら信頼できるので使う",
+          "学校行事なので、そのまま使う",
+          "利用条件を確認し、使える素材だけを選ぶ",
+          "少し色を変えれば自分の作品になるので使う"
+        ],
+        correct:2,
+        feedback:"「見つけた」ことと「使ってよい」ことは別です。まず、その画像の利用条件や権利関係を確認することがトラブル防止につながります。",
+        safe:"安全な一手：許可された素材サイトなどを使い、利用規約を確認する。",
+        fun:"Google画像検索は画像を探す道具です。検索結果に表示されたこと自体は、利用許可を意味しません。",
+        skill:"confirm"
+      },
+      {
+        title:"“フリー素材”の落とし穴", tag:"画像・素材",
+        scene:"『著作権フリー！』と書かれた素材サイトで、使いたいイラストを発見しました。友達が『フリーって書いてあるから、何に使っても大丈夫でしょ』と言っています。",
+        triage:"yellow",
+        evidence:"授業資料では、「著作権フリー素材でも、クレジット必須など素材ごとの利用条件を守る必要がある」と確認しています。",
+        prompt:"一番よい行動は？",
+        options:[
+          "フリーなら条件を読まずに使う",
+          "利用規約を読み、クレジット・加工・公開条件などを確認する",
+          "無料でダウンロードできれば自由に使う",
+          "友達も使っていれば大丈夫なので使う"
+        ],
+        correct:1,
+        feedback:"『フリー』という言葉だけで判断せず、その素材に設定された利用条件を確認することが大切です。",
+        safe:"安全な一手：「フリー」より先に「利用規約」を見る。",
+        fun:"同じ『フリー素材』でも、クレジット表示・加工・商用利用などの条件は素材ごとに違う場合があります。",
+        skill:"confirm"
+      },
+      {
+        title:"「ご自由にどうぞ」台本事件", tag:"台本・脚本",
+        scene:"ネットで『ご自由にどうぞ』と書かれた台本を見つけました。文化祭で使いたいのですが、クラスに合わせて登場人物やセリフを少し変えたいと思っています。",
+        triage:"yellow",
+        evidence:"チェックリストでは、『ご自由にどうぞ』でも著作権放棄とは限らず、改変などに条件がある場合があるとしています。",
+        prompt:"どう進めるのがよい？",
+        options:[
+          "文化祭なら自由に改変できる",
+          "少しの変更なら確認しなくてよい",
+          "利用条件を確認し、必要なら作者に許可をもらう",
+          "クラス全員が賛成なら自由に変えてよい"
+        ],
+        correct:2,
+        feedback:"使ってよい範囲と、改変してよい範囲は同じとは限りません。条件を確認し、分からないときは作者に確認するのが安全です。",
+        safe:"安全な一手：「使える？」だけでなく「変えてよい？」も確認する。",
+        fun:"『公開OK』『上演OK』『改変OK』は別々の条件として決められていることがあります。",
+        skill:"confirm"
+      },
+      {
+        title:"推しキャラ応援事件", tag:"イラスト・二次創作",
+        scene:"大好きなアニメのキャラクターを自分で描きました。うまく描けたので、SNSに投稿して多くの人に見てもらいたいと思っています。",
+        triage:"yellow",
+        evidence:"チェックリストでは、ファンアートでも元の作品の著作権に注意し、公式ガイドラインを確認するよう示しています。",
+        prompt:"投稿前にすることとして最も適切なのは？",
+        options:[
+          "自分の手で描いたので、すぐ投稿する",
+          "みんなも投稿しているので大丈夫と考える",
+          "公式の二次創作ガイドラインなどを確認する",
+          "『応援目的です』と書けば確認は不要"
+        ],
+        correct:2,
+        feedback:"『自分で描いた』ことだけで判断せず、元の作品のルールや公式ガイドラインを確認する姿勢が大切です。",
+        safe:"安全な一手：二次創作は、作品ごとの公式ガイドラインを確認する。",
+        fun:"作品によっては、ファンアートや動画投稿について公式がルールを公開していることがあります。",
+        skill:"empathy"
+      },
+      {
+        title:"合唱動画 SNS事件", tag:"音楽・SNS",
+        scene:"合唱で流行曲を歌いました。とても良い出来だったので、クラスのみんなで撮った動画をSNSに投稿して、たくさんの人に見てもらいたいと思っています。",
+        triage:"red",
+        evidence:"授業資料では、合唱で流行曲を歌った動画をSNSへ投稿する行為には著作権上の確認が必要だと扱っています。また、校内での利用と外部公開は同じではありません。",
+        prompt:"まず取るべき行動は？",
+        options:[
+          "学校で歌った動画だから、そのまま投稿する",
+          "非営利なので、そのまま投稿する",
+          "投稿前に、楽曲・音源・公開方法の条件を確認する",
+          "動画を短くすれば必ず投稿できる"
+        ],
+        correct:2,
+        feedback:"学校で行った活動でも、SNSに外部公開する場面では別の確認が必要になります。『学校だからOK』だけで判断しないことが大切です。",
+        safe:"安全な一手：校内利用とSNS公開を分けて考え、公開条件を確認する。",
+        fun:"『授業で使える』と『世界に向けて公開できる』は、同じ判断にならないことがあります。",
+        skill:"judgment"
+      },
+      {
+        title:"ゲーム実況デビュー事件", tag:"ゲーム・動画",
+        scene:"友達がゲーム実況を始めようとしています。『自分でプレイしている画面なんだから、何を配信してもいいよね』と言っています。",
+        triage:"yellow",
+        evidence:"チェックリストでは、ゲーム実況についてゲーム会社の配信ガイドラインを必ず確認するよう示しています。",
+        prompt:"友達への一番大事なアドバイスは？",
+        options:[
+          "人気ゲームを選ぶこと",
+          "毎日配信すること",
+          "ゲーム会社の配信ガイドラインを確認すること",
+          "BGMだけ小さくすれば何でも配信できる"
+        ],
+        correct:2,
+        feedback:"ゲーム会社ごとに配信できる範囲や条件が示されていることがあります。最初に公式ガイドラインを確認することが重要です。",
+        safe:"安全な一手：配信前に、公式の配信ガイドラインを探す。",
+        fun:"同じ『ゲーム実況』でも、ゲーム会社やタイトルによって配信ルールが違う場合があります。",
+        skill:"confirm"
+      },
+      {
+        title:"生成AI “そっくり”事件", tag:"生成AI",
+        scene:"生成AIでイラストを作っていたら、偶然、大人気キャラクターによく似た画像ができました。SNSに公開したり、Tシャツにしたりしたくなりました。",
+        triage:"yellow",
+        evidence:"チェックリストでは、AIサービスの利用規約を確認し、生成物が既存作品に似ていないかよく確認するよう示しています。",
+        prompt:"最も適切な行動は？",
+        options:[
+          "AIが作ったので、そのまま自由に使う",
+          "少し色を変えてから必ず使う",
+          "利用規約と、既存作品に似ていないかを確認する",
+          "プロンプトを長くすれば権利の問題はなくなる"
+        ],
+        correct:2,
+        feedback:"生成AIを使った場合も、『AIが作ったから自由』と決めつけず、サービスの利用規約と既存作品との関係を確認することが大切です。",
+        safe:"安全な一手：AIの利用規約＋生成物の似方をダブルチェックする。",
+        fun:"AIの問題は『作るとき』だけでなく、『公開する・配る・売るとき』にも確認ポイントがあります。",
+        skill:"judgment"
+      },
+      {
+        title:"校内OK？ SNSもOK？事件", tag:"学校・外部公開",
+        scene:"授業の発表で使った、漫画の一部が入ったスライドがあります。発表が好評だったので、そのスライドをそのままSNSにも載せようという話になりました。",
+        triage:"yellow",
+        evidence:"授業資料の『学校行事で特に注意したいグレーゾーン』では、校内限定の利用とSNSなどの外部公開は分けて考える必要があるとしています。",
+        prompt:"どう考えるのがよい？",
+        options:[
+          "授業で使えたので、SNSでもそのまま使える",
+          "先生が見た資料なので、SNSでも使える",
+          "校内利用と外部公開は別と考え、改めて確認する",
+          "生徒が作ったスライドなら、何でもSNSに出せる"
+        ],
+        correct:2,
+        feedback:"一度学校で使えたからといって、外部公開まで自動的に同じ条件になるわけではありません。公開する場所が変わったら、もう一度確認することが大切です。",
+        safe:"安全な一手：『どこで使うか』が変わったら、判断をやり直す。",
+        fun:"著作権では『何を使うか』だけでなく、『どこで・誰に向けて使うか』も大切な手がかりになります。",
+        skill:"judgment"
+      },
+      {
+        title:"買ったCDなら自由？事件", tag:"音楽・BGM",
+        scene:"家族が経営するお店で、あなたが自分のお金で買ったCDをBGMとして流そうとしています。『買ったものだから自由に使えるよね』と言われました。",
+        triage:"red",
+        evidence:"チェックリストでは、買ったCDやダウンロードした曲でも、お店やイベントで勝手に流すことには注意が必要だとしています。",
+        prompt:"最も適切な考え方は？",
+        options:[
+          "買ったCDなので、どこでも自由に流せる",
+          "家族のお店なら自由に流せる",
+          "購入したことと、お店で流すことは別なので必要な確認をする",
+          "小さな音なら確認は不要"
+        ],
+        correct:2,
+        feedback:"『作品を買った』ことと、『人に向けて利用する』ことは同じではありません。利用の場面に応じて確認する必要があります。",
+        safe:"安全な一手：所有していることと、利用できる範囲を分けて考える。",
+        fun:"CDやデータを買うときに手に入れるのは『作品そのものを自由に利用する権利全部』ではありません。",
+        skill:"judgment"
+      },
+      {
+        title:"FINAL：漫画泥棒", tag:"作者の思い・権利",
+        scene:"あなたは、ものすごく面白い漫画に出会いました。『この作品をもっと多くの人に知ってほしい！』と思い、漫画のページをスマートフォンで撮影して、SNSに投稿しようとしています。悪気はありません。むしろ、作者を応援したい気持ちです。",
+        triage:"red",
+        evidence:"『漫画泥棒』の主人公も、作品を広めたいという善意から行動を始めました。この授業では、便利さや『広めたい気持ち』と他者の権利を天秤にかけ、作者の思いや労力を想像することを大切にしてきました。",
+        prompt:"あなたが最初に考えるべきことは？",
+        options:[
+          "好きな作品なら広めてもよい",
+          "お金を取らなければ自由に投稿できる",
+          "みんなもやっているかを調べる",
+          "作者の権利や思い、利用ルールを確認してから行動する"
+        ],
+        correct:3,
+        feedback:"『広めたい』という善意があっても、作者の権利や思いを無視してよいわけではありません。ルールは罰を避けるためだけでなく、人の思いや作品を守るためにもあります。",
+        safe:"FINAL MESSAGE：善意＋確認＋想像力。好きだからこそ、作者の権利を大切にする。",
+        fun:"著作権を守ることは、『作品を楽しむ人』と『作品を作る人』が文化を続けていくための約束とも考えられます。",
+        skill:"empathy",
+        final:true
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let firstScore = 0;   // 4点 × 10問 = 40点
+    let finalScore = 0;   // 6点 × 10問 = 60点
+    let updatedCount = 0;
+    let firstChoice = null;
+    let firstChoices = [];
+
+    const $ = (id)=>document.getElementById(id);
+    const startScreen = $("startScreen");
+    const missionScreen = $("missionScreen");
+    const reportScreen = $("reportScreen");
+    const checklistModal = $("checklistModal");
+
+    function openChecklist(){ checklistModal.classList.remove("hidden"); }
+    function closeChecklist(){ checklistModal.classList.add("hidden"); }
+    $("openChecklistTop").addEventListener("click", openChecklist);
+    $("openChecklistStart").addEventListener("click", openChecklist);
+    $("closeChecklist").addEventListener("click", closeChecklist);
+    checklistModal.addEventListener("click", e=>{ if(e.target===checklistModal) closeChecklist(); });
+    document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeChecklist(); });
+
+    function startGame(){
+      current = 0; score = 0; firstScore = 0; finalScore = 0; updatedCount = 0;
+      firstChoice = null; firstChoices = [];
+      startScreen.classList.add("hidden");
+      reportScreen.classList.add("hidden");
+      missionScreen.classList.remove("hidden");
+      renderMission();
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    $("startBtn").addEventListener("click", startGame);
+    $("restartBtn").addEventListener("click", startGame);
+
+    function renderMission(){
+      const m = missions[current];
+      $("missionLabel").textContent = `MISSION ${String(current+1).padStart(2,"0")} / ${missions.length}`;
+      $("missionTitle").textContent = m.title;
+      $("missionTag").textContent = m.tag;
+      $("sceneText").textContent = m.scene;
+      $("evidenceText").textContent = m.evidence;
+      $("finalPrompt").textContent = m.prompt;
+      $("evidenceBox").classList.add("hidden");
+      $("finalSection").classList.add("hidden");
+      $("feedbackBox").classList.add("hidden");
+      $("optionList").innerHTML = "";
+      firstChoice = null;
+
+      document.querySelectorAll(".triage-btn").forEach(btn=>{
+        btn.classList.remove("selected");
+        btn.disabled = false;
+      });
+
+      const head = $("missionHead");
+      head.classList.toggle("final-mission", !!m.final);
+
+      updateProgress();
+      updateMiniStats();
+    }
+
+    document.querySelectorAll(".triage-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(firstChoice) return;
+        firstChoice = btn.dataset.triage;
+        firstChoices[current] = firstChoice;
+        btn.classList.add("selected");
+        document.querySelectorAll(".triage-btn").forEach(b=>b.disabled=true);
+
+        const m = missions[current];
+        if(firstChoice === m.triage){
+          firstScore += 4;
+          score += 4;
+          showToast("第一判断クリア！ +4点");
+        } else {
+          showToast("追加情報を読んで考え直そう！");
+        }
+        $("evidenceBox").classList.remove("hidden");
+        buildOptions();
+        $("finalSection").classList.remove("hidden");
+
+        setTimeout(()=>{
+          $("evidenceBox").scrollIntoView({behavior:"smooth",block:"center"});
+        },80);
+      });
+    });
+
+    function buildOptions(){
+      const m = missions[current];
+      const list = $("optionList");
+      list.innerHTML = "";
+      m.options.forEach((text,idx)=>{
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = text;
+        btn.addEventListener("click",()=>answerFinal(idx,btn));
+        list.appendChild(btn);
+      });
+    }
+
+    function answerFinal(idx, selectedBtn){
+      const m = missions[current];
+      const buttons = [...document.querySelectorAll("#optionList .option-btn")];
+      buttons.forEach(b=>b.disabled=true);
+
+      if(idx === m.correct){
+        selectedBtn.classList.add("correct");
+        finalScore += 6;
+        score += 6;
+        if(firstChoice && firstChoice !== m.triage){
+          updatedCount += 1;
+          $("feedbackTitle").textContent = "考え直してMISSION CLEAR！ +6点";
+        } else {
+          $("feedbackTitle").textContent = "MISSION CLEAR！ +6点";
+        }
+      }else{
+        selectedBtn.classList.add("wrong");
+        buttons[m.correct].classList.add("correct");
+        $("feedbackTitle").textContent = "ここで正しい考え方を確認しよう";
+      }
+
+      $("feedbackText").textContent = m.feedback;
+      $("safeAction").textContent = m.safe;
+      $("funFact").textContent = m.fun;
+      $("feedbackBox").classList.remove("hidden");
+      $("nextBtn").textContent = current === missions.length-1 ? "最終レポートを見る" : "次のMISSIONへ";
+      updateMiniStats();
+
+      setTimeout(()=>{
+        $("feedbackBox").scrollIntoView({behavior:"smooth",block:"center"});
+      },80);
+    }
+
+    $("nextBtn").addEventListener("click",()=>{
+      if(current < missions.length-1){
+        current++;
+        renderMission();
+        window.scrollTo({top:0,behavior:"smooth"});
+      }else{
+        showReport();
+      }
+    });
+
+    function updateProgress(){
+      const completed = current;
+      const pct = Math.round((completed / missions.length)*100);
+      $("progressFill").style.width = pct + "%";
+      $("progressText").textContent = `${completed} / ${missions.length}`;
+      $("liveScore").textContent = `${score}点`;
+    }
+
+    function updateMiniStats(){
+      $("miniScore").textContent = `${score}点`;
+      $("miniFirst").textContent = `${firstScore} / 40`;
+      $("miniFinal").textContent = `${finalScore} / 60`;
+      $("liveScore").textContent = `${score}点`;
+    }
+
+    function showReport(){
+      missionScreen.classList.add("hidden");
+      reportScreen.classList.remove("hidden");
+      $("progressFill").style.width = "100%";
+      $("progressText").textContent = `${missions.length} / ${missions.length}`;
+      $("liveScore").textContent = `${score}点`;
+      $("reportScore").textContent = `${score} / 100`;
+
+      let title, icon, msg;
+      if(score >= 90){
+        title = "COPYRIGHT MASTER";
+        icon = "🏆";
+        msg = "とてもよくできました！ 著作権トラブルを避けるための考え方が、しっかり身についています。";
+      }else if(score >= 70){
+        title = "著作権レスキュー隊";
+        icon = "🛡️";
+        msg = "よくできました！ 迷ったときに確認してから行動する力が身についてきています。";
+      }else if(score >= 50){
+        title = "著作権調査員";
+        icon = "🔎";
+        msg = "大切なポイントが分かってきました。『フリー』『学校』『AI』という言葉だけで決めず、条件を見る習慣をつけよう。";
+      }else{
+        title = "著作権ビギナー";
+        icon = "🧭";
+        msg = "ここからがスタート！ 間違えたMISSIONの解説をもう一度読むと、次はもっと判断できるようになります。";
+      }
+      $("reportTitle").textContent = title;
+      $("reportIcon").textContent = icon;
+      $("reportMessage").textContent = msg;
+
+      const firstPct = Math.round((firstScore/40)*100);
+      const finalPct = Math.round((finalScore/60)*100);
+      const skills = [
+        ["① まず考える", firstPct, `${firstScore} / 40点`],
+        ["② 確かめて決める", finalPct, `${finalScore} / 60点`]
+      ];
+      $("skillGrid").innerHTML = skills.map(([name,pct,label])=>`
+        <div class="skill">
+          <div class="skill-top"><span>${name}</span><span>${label}</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:${pct}%"></div></div>
+        </div>
+      `).join("");
+
+      let comment = "";
+      if(score >= 90){
+        comment = `最初の判断も、追加情報を読んだ後の判断もとても安定しています。特に「使ってよいか迷ったら確認する」という姿勢が身についています。この力をSNSや文化祭、生成AIを使う場面でも生かしてください。`;
+      }else if(finalPct >= 80 && firstPct < 70){
+        comment = `最初は迷う場面があっても、追加情報を読んで正しい判断に近づけています。これはとても大切な力です。今回は ${updatedCount} 回、考え直して正しい判断ができました。迷ったときこそ、立ち止まって確認する習慣を続けよう。`;
+      }else if(firstPct >= 80 && finalPct < 70){
+        comment = `第一判断はよくできています。次は、追加情報や利用条件を最後まで読んで、「実際にどう行動するか」まで確かめるとさらによくなります。`;
+      }else if(score >= 70){
+        comment = `著作権の基本的な判断ができています。間違えたMISSIONでは、「誰が作った？」「どこで使う？」「公開する？」「利用条件は？」の4つをもう一度確かめてみよう。`;
+      }else if(score >= 50){
+        comment = `著作権で大切な考え方が少しずつ身についています。答えを暗記するよりも、迷ったときに「利用条件を確認する」ことを覚えておけば、実際の生活でも役立ちます。`;
+      }else{
+        comment = `まだ迷う場面が多かったようです。でも、著作権は最初から全部知っている必要はありません。「勝手に使わず、分からなければ確認する」ことから始めれば大丈夫です。もう一度挑戦してみよう。`;
+      }
+      $("evaluationComment").textContent = comment;
+
+      window.scrollTo({top:0,behavior:"smooth"});
+      if(apiConfigured()){
+        $("apiWarning").classList.add("hidden");
+        loadRanking();
+      }else{
+        $("apiWarning").classList.remove("hidden");
+      }
+    }
+
+    function showToast(message){
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"),1500);
+    }
+
+
+    function setSubmitStatus(message, isError=false){
+      const el = $("submitStatus");
+      el.textContent = message;
+      el.style.color = isError ? "#b91c1c" : "#475569";
+    }
+
+    function submitRanking(){
+      if(!apiConfigured()){
+        $("apiWarning").classList.remove("hidden");
+        setSubmitStatus("Google Apps Scriptとの接続設定が必要です。", true);
+        return;
+      }
+
+      const name = $("studentName").value.trim();
+      const reflection = $("reflectionText").value.trim();
+
+      if(!name){
+        setSubmitStatus("表示名を入力してください。", true);
+        $("studentName").focus();
+        return;
+      }
+      if(!reflection){
+        setSubmitStatus("【著作権で一番大切だと思うこと】を書いてください。", true);
+        $("reflectionText").focus();
+        return;
+      }
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = API_URL;
+      form.target = "questSubmitFrame";
+      form.style.display = "none";
+
+      const payload = {
+        action:"submit",
+        clientId:getClientId(),
+        name:name,
+        score:String(score),
+        firstScore:String(firstScore),
+        finalScore:String(finalScore),
+        reflection:reflection
+      };
+
+      Object.entries(payload).forEach(([k,v])=>{
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = v;
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      setSubmitStatus("送信中…");
+      form.submit();
+      form.remove();
+
+      // Apps ScriptのPOSTは隠しiframeへ送信。少し待ってランキングを再読込する。
+      setTimeout(()=>{
+        setSubmitStatus("送信しました。ランキングを更新します。");
+        loadRanking();
+      }, 1400);
+    }
+
+    function loadRanking(){
+      if(!apiConfigured()){
+        $("apiWarning").classList.remove("hidden");
+        return;
+      }
+
+      $("rankingMeta").textContent = "ランキングを読み込み中…";
+      const callbackName = "__cqRanking_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+      const script = document.createElement("script");
+
+      window[callbackName] = function(data){
+        try{
+          renderRanking(data);
+        }finally{
+          delete window[callbackName];
+          script.remove();
+        }
+      };
+
+      script.onerror = function(){
+        $("rankingMeta").textContent = "ランキングを読み込めませんでした。少し待って更新してください。";
+        delete window[callbackName];
+        script.remove();
+      };
+
+      script.src = API_URL
+        + "?action=ranking&callback=" + encodeURIComponent(callbackName)
+        + "&t=" + Date.now();
+      document.body.appendChild(script);
+    }
+
+    function renderRanking(data){
+      if(!data || data.ok === false){
+        $("rankingMeta").textContent = "ランキングの取得に失敗しました。";
+        return;
+      }
+
+      $("rankingTitle").textContent = data.classLabel ? `${data.classLabel} ランキング` : "クラスランキング";
+      const avg = Number(data.average || 0).toFixed(1);
+      $("rankingMeta").textContent = `参加 ${data.count || 0}人　｜　平均 ${avg}点　｜　上位${Math.min(15, data.count || 0)}人を表示`;
+
+      const list = $("rankList");
+      const ranking = Array.isArray(data.ranking) ? data.ranking : [];
+      if(!ranking.length){
+        list.innerHTML = '<div class="ranking-empty">まだランキングデータがありません。</div>';
+        return;
+      }
+
+      list.innerHTML = ranking.map((r, i)=>{
+        const medal = i===0 ? "🥇" : i===1 ? "🥈" : i===2 ? "🥉" : `${i+1}`;
+        return `
+          <div class="rank-card">
+            <div class="rank-no">${medal}</div>
+            <div class="rank-name">${escapeHtml(r.name)}</div>
+            <div class="rank-score">${Number(r.score)}点</div>
+            <div class="rank-reflection">「${escapeHtml(r.reflection)}」</div>
+          </div>`;
+      }).join("");
+    }
+
+    $("submitRankingBtn").addEventListener("click", submitRanking);
+    $("refreshRankingBtn").addEventListener("click", loadRanking);
+    $("rankingReloadMini").addEventListener("click", loadRanking);
+
+    $("copyReportBtn").addEventListener("click", async ()=>{
+      const reflection = $("reflectionText").value.trim() || "（未記入）";
+      const text =
+`COPYRIGHT QUEST 結果
+表示名：${$("studentName").value.trim() || "（未入力）"}
+称号：${$("reportTitle").textContent}
+得点：${score} / 100点
+①まず考える：${firstScore} / 40点
+②確かめて決める：${finalScore} / 60点
+考え直して正しい判断ができた回数：${updatedCount}回
+
+【評価コメント】
+${$("evaluationComment").textContent}
+
+【著作権で一番大切だと思うこと】
+${reflection}`;
+
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast("結果と振り返りをコピーしました");
+      }catch(e){
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast("結果と振り返りをコピーしました");
+      }
+    });
+  </script>
+</body>
+</html>
