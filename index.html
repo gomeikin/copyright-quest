@@ -197,6 +197,51 @@
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
     .final-mission{border:2px solid #f59e0b;box-shadow:0 0 0 5px #fffbeb}
     .footer{text-align:center;color:#64748b;font-size:12px;line-height:1.8;padding:16px 8px 0}
+
+    .submit-card{
+      margin-top:18px;padding:20px;border-radius:20px;
+      background:linear-gradient(180deg,#f8fbff,#ffffff);
+      border:2px solid #dbeafe;
+    }
+    .submit-card h3{margin:0 0 6px;font-size:20px}
+    .submit-card p{margin:0 0 14px;color:#64748b;line-height:1.7;font-size:13px}
+    .name-input{
+      width:100%;border:2px solid #dbe4f0;border-radius:14px;
+      padding:13px 14px;outline:none;background:#fff;
+    }
+    .name-input:focus{border-color:#818cf8;box-shadow:0 0 0 4px #eef2ff}
+    .field-label{display:block;font-weight:1000;margin:12px 0 7px}
+    .submit-status{margin-top:10px;font-size:13px;font-weight:800;color:#475569;min-height:1.4em}
+    .ranking{
+      margin-top:20px;border:1px solid #dbe4f0;border-radius:22px;overflow:hidden;background:#fff;
+    }
+    .ranking-head{
+      padding:18px 20px;background:linear-gradient(135deg,#0f172a,#312e81);color:#fff;
+    }
+    .ranking-head-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .ranking-head h3{margin:3px 0 0;font-size:22px}
+    .ranking-meta{font-size:12px;color:#c7d2fe;margin-top:7px;line-height:1.7}
+    .rank-list{padding:10px}
+    .rank-card{
+      display:grid;grid-template-columns:48px minmax(90px,150px) 72px 1fr;
+      gap:10px;align-items:start;padding:13px 10px;border-bottom:1px solid #eef2f7;
+    }
+    .rank-card:last-child{border-bottom:0}
+    .rank-no{font-size:18px;font-weight:1000;text-align:center}
+    .rank-name{font-weight:1000;overflow-wrap:anywhere}
+    .rank-score{font-weight:1000;color:#4f46e5;white-space:nowrap}
+    .rank-reflection{color:#475569;line-height:1.55;font-size:13px;overflow-wrap:anywhere}
+    .rank-note{padding:0 18px 15px;color:#64748b;font-size:12px;line-height:1.6}
+    .ranking-empty{padding:24px;text-align:center;color:#64748b}
+    .api-warning{
+      margin-top:12px;padding:12px 14px;border-radius:13px;background:#fff7ed;
+      border:1px solid #fed7aa;color:#9a3412;font-size:12px;line-height:1.6;
+    }
+    @media(max-width:720px){
+      .rank-card{grid-template-columns:38px 1fr 64px}
+      .rank-reflection{grid-column:2 / 4}
+    }
+
     @media(max-width:720px){
       .app{width:min(100% - 14px,980px);padding-top:8px}
       .topbar{border-radius:14px;top:4px}
@@ -358,9 +403,47 @@
 
         <div class="reflection">
           <label for="reflectionText">FINAL：著作権で一番大切だと思うことは何ですか？</label>
-          <textarea id="reflectionText" placeholder="今日のMISSIONをふまえて、自分の言葉で書いてみよう。"></textarea>
+          <textarea id="reflectionText" maxlength="160" placeholder="今日のMISSIONをふまえて、自分の言葉で書いてみよう。（160字まで）"></textarea>
+
+          <div class="submit-card">
+            <h3>🏆 クラスランキングに参加</h3>
+            <p>
+              得点と振り返りをクラスで共有します。ランキングには下の「表示名」が出ます。
+              <b>本名ではなく、出席番号・イニシャル・ニックネームをおすすめします。</b>
+            </p>
+            <label class="field-label" for="studentName">表示名</label>
+            <input class="name-input" id="studentName" maxlength="20" placeholder="例：17番 / Aさん / めいきん">
+            <div class="report-actions">
+              <button class="btn btn-primary" id="submitRankingBtn">ランキングに送信</button>
+              <button class="btn btn-outline" id="refreshRankingBtn">ランキングを更新</button>
+            </div>
+            <div class="submit-status" id="submitStatus"></div>
+            <div class="api-warning hidden" id="apiWarning">
+              ランキング機能はまだ未接続です。index.html 内の API_URL に、Google Apps Script のウェブアプリURLを設定してください。
+            </div>
+          </div>
+
+          <div class="ranking" id="rankingBox">
+            <div class="ranking-head">
+              <div class="ranking-head-top">
+                <div>
+                  <div class="kicker" style="color:#a5b4fc">CLASS SCORE RANKING</div>
+                  <h3 id="rankingTitle">クラスランキング</h3>
+                </div>
+                <button class="btn btn-light" id="rankingReloadMini" style="padding:8px 10px;font-size:12px">更新</button>
+              </div>
+              <div class="ranking-meta" id="rankingMeta">読み込み前</div>
+            </div>
+            <div class="rank-list" id="rankList">
+              <div class="ranking-empty">結果を送信すると、ここにランキングが表示されます。</div>
+            </div>
+            <div class="rank-note">
+              ※順位は得点だけで決まります。「著作権で一番大切だと思うこと」の文章自体には順位をつけていません。
+            </div>
+          </div>
+
           <div class="report-actions">
-            <button class="btn btn-primary" id="copyReportBtn">結果＋振り返りをコピー</button>
+            <button class="btn btn-outline" id="copyReportBtn">結果＋振り返りをコピー</button>
             <button class="btn btn-outline" id="restartBtn">もう一度挑戦</button>
           </div>
         </div>
@@ -411,9 +494,33 @@
     </div>
   </div>
 
+  <iframe name="questSubmitFrame" id="questSubmitFrame" class="hidden" title="送信"></iframe>
   <div class="toast" id="toast">コピーしました</div>
 
   <script>
+    // ▼ Apps Script をデプロイした後、この1行だけ書き換えてください
+    const API_URL = "https://script.google.com/macros/s/AKfycbwiYNJ0n5CyPWxWOUUt4b5ipG2PiYw9uVTl19F8uPUb0-lz3YkGUZ_NusvU1-kWw6xf/exec";
+
+    function apiConfigured(){
+      return API_URL.startsWith("https://script.google.com/");
+    }
+
+    function getClientId(){
+      const key = "copyrightQuestClientId";
+      let id = localStorage.getItem(key);
+      if(!id){
+        id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : "cq-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+        localStorage.setItem(key,id);
+      }
+      return id;
+    }
+
+    function escapeHtml(s){
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
     const missions = [
       {
         title:"文化祭ポスター事件", tag:"画像・配布物",
@@ -816,6 +923,12 @@
       $("evaluationComment").textContent = comment;
 
       window.scrollTo({top:0,behavior:"smooth"});
+      if(apiConfigured()){
+        $("apiWarning").classList.add("hidden");
+        loadRanking();
+      }else{
+        $("apiWarning").classList.remove("hidden");
+      }
     }
 
     function showToast(message){
@@ -825,10 +938,139 @@
       setTimeout(()=>toast.classList.remove("show"),1500);
     }
 
+
+    function setSubmitStatus(message, isError=false){
+      const el = $("submitStatus");
+      el.textContent = message;
+      el.style.color = isError ? "#b91c1c" : "#475569";
+    }
+
+    function submitRanking(){
+      if(!apiConfigured()){
+        $("apiWarning").classList.remove("hidden");
+        setSubmitStatus("Google Apps Scriptとの接続設定が必要です。", true);
+        return;
+      }
+
+      const name = $("studentName").value.trim();
+      const reflection = $("reflectionText").value.trim();
+
+      if(!name){
+        setSubmitStatus("表示名を入力してください。", true);
+        $("studentName").focus();
+        return;
+      }
+      if(!reflection){
+        setSubmitStatus("【著作権で一番大切だと思うこと】を書いてください。", true);
+        $("reflectionText").focus();
+        return;
+      }
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = API_URL;
+      form.target = "questSubmitFrame";
+      form.style.display = "none";
+
+      const payload = {
+        action:"submit",
+        clientId:getClientId(),
+        name:name,
+        score:String(score),
+        firstScore:String(firstScore),
+        finalScore:String(finalScore),
+        reflection:reflection
+      };
+
+      Object.entries(payload).forEach(([k,v])=>{
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = v;
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      setSubmitStatus("送信中…");
+      form.submit();
+      form.remove();
+
+      // Apps ScriptのPOSTは隠しiframeへ送信。少し待ってランキングを再読込する。
+      setTimeout(()=>{
+        setSubmitStatus("送信しました。ランキングを更新します。");
+        loadRanking();
+      }, 1400);
+    }
+
+    function loadRanking(){
+      if(!apiConfigured()){
+        $("apiWarning").classList.remove("hidden");
+        return;
+      }
+
+      $("rankingMeta").textContent = "ランキングを読み込み中…";
+      const callbackName = "__cqRanking_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+      const script = document.createElement("script");
+
+      window[callbackName] = function(data){
+        try{
+          renderRanking(data);
+        }finally{
+          delete window[callbackName];
+          script.remove();
+        }
+      };
+
+      script.onerror = function(){
+        $("rankingMeta").textContent = "ランキングを読み込めませんでした。少し待って更新してください。";
+        delete window[callbackName];
+        script.remove();
+      };
+
+      script.src = API_URL
+        + "?action=ranking&callback=" + encodeURIComponent(callbackName)
+        + "&t=" + Date.now();
+      document.body.appendChild(script);
+    }
+
+    function renderRanking(data){
+      if(!data || data.ok === false){
+        $("rankingMeta").textContent = "ランキングの取得に失敗しました。";
+        return;
+      }
+
+      $("rankingTitle").textContent = data.classLabel ? `${data.classLabel} ランキング` : "クラスランキング";
+      const avg = Number(data.average || 0).toFixed(1);
+      $("rankingMeta").textContent = `参加 ${data.count || 0}人　｜　平均 ${avg}点　｜　上位${Math.min(15, data.count || 0)}人を表示`;
+
+      const list = $("rankList");
+      const ranking = Array.isArray(data.ranking) ? data.ranking : [];
+      if(!ranking.length){
+        list.innerHTML = '<div class="ranking-empty">まだランキングデータがありません。</div>';
+        return;
+      }
+
+      list.innerHTML = ranking.map((r, i)=>{
+        const medal = i===0 ? "🥇" : i===1 ? "🥈" : i===2 ? "🥉" : `${i+1}`;
+        return `
+          <div class="rank-card">
+            <div class="rank-no">${medal}</div>
+            <div class="rank-name">${escapeHtml(r.name)}</div>
+            <div class="rank-score">${Number(r.score)}点</div>
+            <div class="rank-reflection">「${escapeHtml(r.reflection)}」</div>
+          </div>`;
+      }).join("");
+    }
+
+    $("submitRankingBtn").addEventListener("click", submitRanking);
+    $("refreshRankingBtn").addEventListener("click", loadRanking);
+    $("rankingReloadMini").addEventListener("click", loadRanking);
+
     $("copyReportBtn").addEventListener("click", async ()=>{
       const reflection = $("reflectionText").value.trim() || "（未記入）";
       const text =
 `COPYRIGHT QUEST 結果
+表示名：${$("studentName").value.trim() || "（未入力）"}
 称号：${$("reportTitle").textContent}
 得点：${score} / 100点
 ①まず考える：${firstScore} / 40点
